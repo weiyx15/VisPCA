@@ -33,3 +33,5 @@ The visualization and interaction is done by `d3.js`.
 - run `pca.py` and generate `data.json`
 - run `array_to_image.py` and generate images in `imgs`
 - open `index.html` in browser (perhaps requires localhost HTTP server)
+
+![visualization](pca.png)
