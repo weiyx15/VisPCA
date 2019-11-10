@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<head>
+<title>scatter</title>
+</head>
+
+<style>
+.axis path,
+.axis line{
+	fill:none;
+	stroke:black;
+	shape-rendering:crispEdges;
+}
+.axis text{
+	font-family: sans-serif;
+	font-size: 11px;
+}
+</style>
+
+
+<body>
+
+<img id="alter" src="imgs/blank.png" alt="alter image" height="140">
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script>
+
+    var width=900;
+    var height=900;
+    var padding={left:30, right:30, top:30, bottom:30};
+    var colors=["Blue", "Green", "Yellow", "Orange", "Red", "Purple", "Pink", "Indigo", "Aqua", "Gray"];
+    var seriesNames=["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    var svg=d3.select("body")
+                .append("svg")
+                .attr("width",width)
+                .attr("height",height);
+    addLegend();
+
+    d3.json("data.json", function(error, data) {
+        if (error) throw error;
+
+        var xScale=d3.scale.linear()
+				.domain([0,1.1*d3.max(data.data,function(d){
+					return d[0];
+				})])
+				.range([0,width-padding.left-padding.right]);
+
+        var yScale=d3.scale.linear()
+                        .domain([0,1.1*d3.max(data.data,function(d){
+                            return d[1];
+                        })])
+                        .range([height-padding.top-padding.bottom,0]);
+
+        var circle=svg.selectAll("circle")
+                        .data(data.data)
+                        .enter()
+                        .append("circle")
+                        .attr("fill", function (d) {
+                            return colors[d[2]];
+                        })
+                        .attr("cx", function(d){
+                            return padding.left+xScale(d[0]);
+                        })
+                        .attr("cy", function(d){
+                            return yScale(d[1])+padding.bottom;
+                        })
+                        .attr("r",5)    //radix
+                        .on("mouseover", function(d) {
+                            d3.select(this).attr("r", 10);
+                            var element = document.getElementById("alter");
+                            element.src = "imgs/" + d[3] + ".png";
+                        })
+                        .on("mouseout", function() {
+                            d3.select(this).attr("r", 5);
+                            var element = document.getElementById("alter");
+                            element.src = "imgs/blank.png";
+                        });
+
+        // define axis-X
+        var xAxis=d3.svg.axis()
+                    .scale(xScale)
+                    .orient("bottom");//坐标轴方向
+        //define axis-Y
+        var yAxis=d3.svg.axis()
+                    .scale(yScale)
+                    .orient("left");
+
+        // append axis-X
+        svg.append("g")
+            .attr("class","axis")
+            .attr("transform","translate("+padding.left+","+(height-padding.bottom)+")")
+            .call(xAxis);
+
+        // append axis-Y
+        svg.append("g")
+            .attr("class","axis")
+            .attr("transform","translate("+padding.left+","+padding.top+")")
+            .call(yAxis);
+            });
+
+    function addLegend() {
+        var legend = svg.selectAll(".legend")
+            .data(seriesNames)
+            .enter()
+            .append("g")
+            .attr("class", "legend");
+
+        legend.append("circle")
+            .attr("cx", width - 50)
+            .attr("cy", function(d, i) {
+                return 50 + 30 * i;
+            })
+            .attr("r", 10)
+            .attr("fill", function (d) {
+                return colors[parseInt(d)];
+            });
+
+        legend.append("text")
+            .attr("x", width - 25)
+            .attr("y", function(d, i) {
+                return 55 + 30 * i;
+            })
+            .style("text-anchor", "begin")
+            .text(function (d) {
+                return d;
+            })
+    }
+
+</script>
+
+</body>
+</html>
