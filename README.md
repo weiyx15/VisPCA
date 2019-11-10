@@ -30,8 +30,9 @@ The visualization and interaction is done by `d3.js`.
 
 ## Instructions
 
-- run `pca.py` and generate `data.json`
-- run `array_to_image.py` and generate images in `imgs`
-- open `index.html` in browser (perhaps requires localhost HTTP server)
+- Run `pca.py` and generate `data.json`
+- Run `array_to_image.py` and generate images in `imgs`
+- Open `index.html` in browser (perhaps requires localhost HTTP server)
+- The circle becomes larger when the mouse passes over, and the image corresponding to the circile appears on the left-bottom
 
 ![visualization](pca.png)
